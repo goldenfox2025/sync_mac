@@ -78,13 +78,6 @@ public:
 
         return true;
     }
-
-    /**
-     * 从缓冲区获取元素
-     *
-     * @param value 用于存储获取的元素
-     * @return 成功返回true，缓冲区为空返回false
-     */
     bool get(store_type& value) {
         Cell* cell;
         uint32_t pos = dequeue_pos_.load(std::memory_order_relaxed);
@@ -125,7 +118,6 @@ public:
         // 再次检查序列号，确保没有其他线程修改了单元格状态
         uint32_t seq_check = cell->sequence.load(std::memory_order_seq_cst);
         if (seq_check != pos + 1) {
-
             uint32_t expected = pos + 1;
             dequeue_pos_.compare_exchange_strong(expected, pos, std::memory_order_seq_cst);
             return false;
